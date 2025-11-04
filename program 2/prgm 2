@@ -1,0 +1,85 @@
+
+Q2 WAP to convert a given valid parenthesized infix
+arithmetic expression to postfix expression. The
+expression consists of single character operands and the
+binary operators + (plus), - (minus), * (multiply) and /
+(divide)
+
+PROGRAM:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h> 
+#include <string.h>
+
+#define MAX 100
+
+char stack[MAX];
+int top = -1;
+
+void push(char c) {
+    if (top == MAX - 1) {
+        printf("Stack Overflow\n");
+        exit(1);
+    }
+    stack[++top] = c;
+}
+
+char pop() {
+    if (top == -1) {
+        printf("Stack Underflow\n");
+        exit(1);
+    }
+    return stack[top--];
+}
+
+int precedence(char op) {
+    switch (op) {
+        case '+':
+        case '-': return 1;
+        case '*':
+        case '/': return 2;
+        default: return 0;
+    }
+}
+
+void infixToPostfix(char infix[], char postfix[]) {
+    int i = 0, j = 0;
+    char c, x;
+
+    while ((c = infix[i++]) != '\0') {
+        if (isalpha(c) || isdigit(c)) {
+            postfix[j++] = c; 
+        } 
+        else if (c == '(') {
+            push(c);
+        } 
+        else if (c == ')') {
+            while ((x = pop()) != '(')
+                postfix[j++] = x;
+        } 
+        else {
+            while (top != -1 && precedence(stack[top]) >= precedence(c))
+                postfix[j++] = pop();
+            push(c);
+        }
+    }
+
+    while (top != -1)
+        postfix[j++] = pop();
+
+    postfix[j] = '\0'; 
+}
+
+int main() {
+    char infix[MAX], postfix[MAX];
+
+    printf("Enter a valid parenthesized infix expression: ");
+    scanf("%s", infix);
+
+    infixToPostfix(infix, postfix);
+
+    printf("Postfix Expression: %s\n", postfix);
+
+    return 0;
+}
