@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* top = NULL;
+struct Node* front = NULL;
+struct Node* rear = NULL;
+
+void push() {
+    int value;
+    printf("Enter value: ");
+    scanf("%d", &value);
+
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = top;
+    top = newNode;
+}
+
+void pop() {
+    if (top == NULL) {
+        printf("Stack Underflow\n");
+        return;
+    }
+    struct Node* temp = top;
+    printf("Popped %d\n", top->data);
+    top = top->next;
+    free(temp);
+}
+
+void displayStack() {
+    if (top == NULL) {
+        printf("Stack is Empty\n");
+        return;
+    }
+    struct Node* temp = top;
+    printf("Stack: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+void insertQueue() {
+    int value;
+    printf("Enter value: ");
+    scanf("%d", &value);
+
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (front == NULL) {
+        front = rear = newNode;
+    } else {
+        rear->next = newNode;
+        rear = newNode;
+    }
+}
+
+void deleteQueue() {
+    if (front == NULL) {
+        printf("Queue Underflow\n");
+        return;
+    }
+    struct Node* temp = front;
+    printf("Deleted %d\n", front->data);
+    front = front->next;
+
+    if (front == NULL)
+        rear = NULL;
+
+    free(temp);
+}
+
+void displayQueue() {
+    if (front == NULL) {
+        printf("Queue is Empty\n");
+        return;
+    }
+    struct Node* temp = front;
+    printf("Queue: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice;
+
+    while (1) {
+        printf("\n1. Push (Stack)\n2. Pop (Stack)\n3. Display Stack\n");
+        printf("4. Insert (Queue)\n5. Delete (Queue)\n6. Display Queue\n7. Exit\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: push(); break;
+            case 2: pop(); break;
+            case 3: displayStack(); break;
+            case 4: insertQueue(); break;
+            case 5: deleteQueue(); break;
+            case 6: displayQueue(); break;
+            case 7: exit(0);
+            default: printf("Invalid choice\n");
+        }
+    }
+    return 0;
+}
